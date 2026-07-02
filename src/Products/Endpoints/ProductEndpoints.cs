@@ -17,6 +17,15 @@ public static class ProductEndpoints
         .WithName("GetAllProducts")
         .Produces<List<Product>>(StatusCodes.Status200OK);
 
-
+group.MapGet("/{id}", async (int id, ProductDataContext db) =>
+        {
+            return await db.Product.FindAsync(id)
+                is Product product
+                    ? Results.Ok(product)
+                    : Results.NotFound();
+        })
+        .WithName("GetProductById")
+        .Produces<Product>(StatusCodes.Status200OK)
+        .Produces(StatusCodes.Status404NotFound);
     }
 }
